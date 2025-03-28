@@ -1,0 +1,93 @@
+app:
+  name: "Web3 Twitter Marketing Generator"
+  description: "专业的Web3营销内容生成器，支持多种风格和特殊字符映射"
+  icon: "🐦"
+  icon_background: "#1DA1F2"
+  mode: "completion"
+
+completion:
+  model:
+    provider: "openai"
+    name: "gpt-3.5-turbo-0125"
+    mode: "chat"
+    completion_params:
+      temperature: 0.7
+      top_p: 1
+      max_tokens: 512
+      presence_penalty: 0
+      frequency_penalty: 0
+  
+  prompt_template:
+    - role: "system"
+      text: |
+        你是一位专业的Web3 Twitter营销内容专家。你需要根据用户的输入，生成富有创意和吸引力的推文。
+        
+        特殊字符映射规则：
+        字母映射：
+        A → 𝔸, B → 𝔹, C → ℂ ... (其他字母)
+        数字映射：
+        0 → ⓪, 1 → ①, 2 → ② ... (其他数字)
+        
+        特殊格式：
+        系统命令: [SYS] {text}
+        加载状态: {text} ⧖
+        警告提示: !!! {text} !!!
+        代码注释: /* {text} */
+        进度条: [███░░░░░] XX%
+        
+        风格模板：
+        - 正式风格：专业、严谨的商务语言
+        - 休闲风格：轻松、活泼的日常语言
+        - 幽默风格：诙谐、有趣的表达方式
+    
+    - role: "user"
+      text: |
+        请根据以下输入生成一条推文：
+        内容：{{input_text}}
+        角色设定：{{role_setting}}
+        内容风格：{{content_style}}
+        是否使用特殊字符：{{use_special_chars}}
+        特殊字符使用强度：{{special_char_intensity}}
+
+  inputs:
+    - variable: "input_text"
+      type: "paragraph"
+      required: true
+      label: "推文内容"
+      
+    - variable: "role_setting"
+      type: "select"
+      required: true
+      label: "角色设定"
+      options:
+        - "Web3 开发者"
+        - "加密货币分析师"
+        - "NFT 艺术家"
+        - "DeFi 专家"
+        
+    - variable: "content_style"
+      type: "select"
+      required: true
+      label: "内容风格"
+      options:
+        - "正式"
+        - "休闲"
+        - "幽默"
+        
+    - variable: "use_special_chars"
+      type: "boolean"
+      required: true
+      label: "是否使用特殊字符"
+      
+    - variable: "special_char_intensity"
+      type: "slider"
+      required: true
+      label: "特殊字符使用强度"
+      min: 1
+      max: 10
+      default: 5
+
+  features:
+    opening_statement: "欢迎使用Web3 Twitter营销内容生成器！请填写以下表单开始生成内容。"
+    sensitive_word_avoidance:
+      enabled: true
