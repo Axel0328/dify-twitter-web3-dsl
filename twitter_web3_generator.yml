@@ -1,0 +1,133 @@
+app:
+  name: "Web3 Twitter Marketing Generator"
+  description: "专业的Web3营销内容生成器，支持多种风格和特殊字符映射"
+  icon: "🐦"
+  icon_background: "#1DA1F2"
+  mode: "completion"
+
+completion:
+  model:
+    provider: "openai"
+    name: "gpt-3.5-turbo-0125"
+    mode: "chat"
+    completion_params:
+      temperature: 0.7
+      top_p: 1
+      max_tokens: 512
+      presence_penalty: 0
+      frequency_penalty: 0
+  
+  prompt_template:
+    - role: "system"
+      text: |
+        你是一位专业的Web3 Twitter营销内容专家。你需要根据用户的输入，生成富有创意和吸引力的推文。
+        
+        特殊字符映射规则：
+        字母映射：
+        A → 𝔸, B → 𝔹, C → ℂ, D → 𝔻, E → 𝔼, F → 𝔽, G → 𝔾, H → ℍ, I → 𝕀, J → 𝕁, 
+        K → 𝕂, L → 𝕃, M → 𝕄, N → ℕ, O → 𝕆, P → ℙ, Q → ℚ, R → ℝ, S → 𝕊, T → 𝕋, 
+        U → 𝕌, V → 𝕍, W → 𝕎, X → 𝕏, Y → 𝕐, Z → ℤ
+        
+        数字映射：
+        0 → ⓪, 1 → ①, 2 → ②, 3 → ③, 4 → ④, 5 → ⑤, 6 → ⑥, 7 → ⑦, 8 → ⑧, 9 → ⑨
+        
+        特殊格式：
+        系统命令: [SYS] {text}
+        加载状态: {text} ⧖
+        警告提示: !!! {text} !!!
+        代码注释: /* {text} */
+        进度条: [███░░░░░] XX%
+        分隔线: ▰▰▰▰▰▰▰▰▰▰
+        引用: 『{text}』
+        强调: 【{text}】
+        链接: ⟨{text}⟩
+        标签: #⃣{text}
+        
+        风格模板：
+        - 正式风格：
+          * 专业、严谨的商务语言
+          * 使用行业术语
+          * 保持客观和权威性
+          * 示例：『最新研究表明，#Web3 技术正在重塑金融行业的未来』
+        
+        - 休闲风格：
+          * 轻松、活泼的日常语言
+          * 使用表情符号
+          * 口语化表达
+          * 示例：『嘿！来看看这个超酷的 #NFT 项目 🚀』
+        
+        - 幽默风格：
+          * 诙谐、有趣的表达方式
+          * 使用双关语和文字游戏
+          * 创意性强
+          * 示例：『当 #DeFi 遇上熊市，我们都是🐻生🐻世的韭菜 😂』
+    
+    - role: "user"
+      text: |
+        请根据以下输入生成一条推文：
+        内容：{{input_text}}
+        角色设定：{{role_setting}}
+        内容风格：{{content_style}}
+        是否使用特殊字符：{{use_special_chars}}
+        特殊字符使用强度：{{special_char_intensity}}
+
+  inputs:
+    - variable: "input_text"
+      type: "paragraph"
+      required: true
+      label: "推文内容"
+      max_length: 1000
+      
+    - variable: "role_setting"
+      type: "select"
+      required: true
+      label: "角色设定"
+      options:
+        - "Web3 开发者"
+        - "加密货币分析师"
+        - "NFT 艺术家"
+        - "DeFi 专家"
+      default: "Web3 开发者"
+        
+    - variable: "content_style"
+      type: "select"
+      required: true
+      label: "内容风格"
+      options:
+        - "正式"
+        - "休闲"
+        - "幽默"
+      default: "正式"
+        
+    - variable: "use_special_chars"
+      type: "boolean"
+      required: true
+      label: "是否使用特殊字符"
+      default: true
+      
+    - variable: "special_char_intensity"
+      type: "slider"
+      required: true
+      label: "特殊字符使用强度"
+      min: 1
+      max: 10
+      default: 5
+      step: 1
+
+  features:
+    opening_statement: "欢迎使用Web3 Twitter营销内容生成器！请填写以下表单开始生成内容。"
+    sensitive_word_avoidance:
+      enabled: true
+    suggested_questions_after_answer:
+      enabled: true
+    suggested_questions:
+      - "生成一条关于最新区块链技术趋势的推文"
+      - "创建一条NFT艺术作品发布的推文"
+      - "撰写一条DeFi项目更新的推文"
+    file_upload:
+      image:
+        enabled: true
+        number_limits: 1
+        transfer_methods:
+          - local_file
+          - remote_url
